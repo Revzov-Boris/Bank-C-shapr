@@ -1,0 +1,15 @@
+RUT SHOP.NET
+Кассовый чек
+----------------------------------------
+Покупка: 4bbf9693-9a91-4044-8172-ca18dcafa700
+Дата (UTC): 2026-05-04 13:49:19
+Клиент: Алёна Руткова (bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb1)
+----------------------------------------
+Товары (id):
+- aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa1
+- aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa2
+- aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa2
+----------------------------------------
+ИТОГО: 2850,00 RUB
+Начислено бонусов: 28
+Спасибо за покупку!

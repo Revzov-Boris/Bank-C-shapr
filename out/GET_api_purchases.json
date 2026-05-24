@@ -1,0 +1,15 @@
+[
+    {
+        "id": "4bbf9693-9a91-4044-8172-ca18dcafa700",
+        "customerId": "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb1",
+        "customerName": "Алёна Руткова",
+        "createdAtUtc": "2026-05-04T13:49:19.258749Z",
+        "total": 2850.0,
+        "productIds": [
+            "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa1",
+            "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa2",
+            "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa2"
+        ],
+        "earnedPoints": 28
+    }
+]

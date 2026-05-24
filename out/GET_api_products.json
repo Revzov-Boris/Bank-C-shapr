@@ -1,0 +1,14 @@
+[
+    {
+        "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa1",
+        "name": "Книга «C# в примерах»",
+        "price": 450.0,
+        "stock": 20
+    },
+    {
+        "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa2",
+        "name": "Кофе в зёрнах 1 кг",
+        "price": 1200.0,
+        "stock": 8
+    }
+]
