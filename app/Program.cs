@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using bank.net.@api; // Изменили регистр на Api, чтобы избежать конфликтов компилятора
+using bank.net.api; // Изменили регистр на Api, чтобы избежать конфликтов компилятора
 using bank.net.database;
 using bank.net.dto;
 using bank.net.interfaces;
