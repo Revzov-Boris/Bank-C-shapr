@@ -39,6 +39,7 @@ public class UserService(BankDbContext db) : IUserService
 
     public async Task<User> UpdateAsync(Guid id, CreateUserRequest request)
     {
+        
         ValidateUserFields(request.FullName, request.Email);
 
         var entity = await db.Users.FirstOrDefaultAsync(x => x.Id == id);
@@ -74,6 +75,7 @@ public class UserService(BankDbContext db) : IUserService
 
     private static void ValidateUserFields(string fullName, string email)
     {
+        System.Console.WriteLine("Валидация " + fullName + " " + email);
         if (string.IsNullOrWhiteSpace(fullName))
         {
             throw new ArgumentException("ФИО пользователя не должно быть пустым.");

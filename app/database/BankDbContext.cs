@@ -12,14 +12,27 @@ public class BankDbContext(DbContextOptions<BankDbContext> options) : DbContext(
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Конфигурация точности для денежных типов (decimal) в PostgreSQL
-        modelBuilder.Entity<Card>()
-            .Property(c => c.Balance)
-            .HasPrecision(18, 2);
-
+        modelBuilder.Entity<Card>(entity =>
+        {
+            entity.Property(c => c.Balance)
+                .HasPrecision(12, 2);
+            entity.Property(n => n.CardNumber)
+                .HasMaxLength(16)
+                .IsRequired();
+            entity.HasIndex(c => c.CardNumber)
+                .IsUnique();
+            
+        
+        });
+            
         modelBuilder.Entity<Transfer>()
             .Property(t => t.Amount)
             .HasPrecision(18, 2);
             
+        
+        modelBuilder.Entity<User>()
+            .HasIndex(u => u.Email)
+            .IsUnique();
         base.OnModelCreating(modelBuilder);
     }
 }

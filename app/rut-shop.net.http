@@ -1,4 +1,4 @@
-@rut_shop.net_HostAddress = http://localhost:5209
+@bank-rut_HostAddress = http://localhost:8080
 
 ### 1) Каталог товаров
 GET {{rut_shop.net_HostAddress}}/api/products

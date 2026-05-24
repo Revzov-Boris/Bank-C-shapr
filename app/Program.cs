@@ -1,42 +1,41 @@
 using Microsoft.EntityFrameworkCore;
-using rut_shop.net.api;
-using rut_shop.net.database;
-using rut_shop.net.dto;
-using rut_shop.net.interfaces;
-using rut_shop.net.services;
+using bank.net.@api; // Изменили регистр на Api, чтобы избежать конфликтов компилятора
+using bank.net.database;
+using bank.net.dto;
+using bank.net.interfaces;
+using bank.net.services;
 
 /*
  * =============================================================================
- * RUT SHOP.NET — ЧИСТЫЙ ПРИМЕР MINIMAL API ПРОЕКТА
+ * RUT BANK.NET — ЧИСТЫЙ ПРИМЕР MINIMAL API ПРОЕКТА
  * =============================================================================
  *
  * Архитектура проекта:
- * - model     : сущности домена + DTO для API.
- * - database  : EF Core DbContext + PostgreSQL.
- * - services  : бизнес-логика магазина, покупок и программы лояльности.
+ * - model     : сущности домена (User, Card, Transfer).
+ * - database  : EF Core DbContext + PostgreSQL (BankDbContext).
+ * - services  : бизнес-логика управления пользователями, картами и переводами.
  * - api       : endpoint-модули (каждый модуль отвечает за свою группу ручек).
+ * - dto       : объекты передачи данных (Request/Response) + Mapper.
  *
  * Реализованы сценарии:
- * - просмотр товаров;
- * - просмотр клиентов;
- * - создание покупок;
- * - расчёт и накопление бонусов лояльности;
- * - выгрузка текстового чека по покупке.
+ * - просмотр и создание пользователей (клиентов);
+ * - выпуск, блокировка и разблокировка банковских карт;
+ * - выполнение переводов между картами в рамках одной транзакции (бизнес-сценарий);
+ * - выгрузка текстового кассового чека по транзакции.
  */
 var builder = WebApplication.CreateBuilder(args);
 
 // -----------------------------------------------------------------------------
 // SWAGGER / OPENAPI
 // -----------------------------------------------------------------------------
-// Включаем генерацию OpenAPI и Swagger UI.
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new()
     {
-        Title = "RUT Shop API",
+        Title = "RUT Bank API",
         Version = "v1",
-        Description = "Демонстрационный API магазина: товары, клиенты, покупки, лояльность, чек."
+        Description = "Демонстрационный API банка: клиенты, карты, транзакции, блокировки, чеки."
     });
 });
 
@@ -46,46 +45,55 @@ builder.Services.AddSwaggerGen(options =>
 var connectionString = builder.Configuration.GetConnectionString("Postgres")
     ?? throw new InvalidOperationException("Не найдена строка подключения ConnectionStrings:Postgres.");
 
-builder.Services.AddDbContext<ShopDbContext>(options =>
+builder.Services.AddDbContext<BankDbContext>(options =>
 {
     options.UseNpgsql(connectionString);
 });
 
-// Сервисы с бизнес-логикой.
-builder.Services.AddScoped<IProductService, ProductService>();
-builder.Services.AddScoped<ICustomerService, CustomerService>();
-builder.Services.AddScoped<ILoyaltyService, LoyaltyService>();
-builder.Services.AddScoped<IPurchaseService, PurchaseService>();
-builder.Services.AddScoped<IReceiptService, ReceiptService>();
-builder.Services.AddScoped<IMapper, Mapper>();
+// -----------------------------------------------------------------------------
+// DEPENDENCY INJECTION (Регистрация сервисов)
+// -----------------------------------------------------------------------------
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ICardService, CardService>();
+builder.Services.AddScoped<ITransferService, TransferService>();
+builder.Services.AddSingleton<IMapper, Mapper>();
 
 var app = builder.Build();
 
+// -----------------------------------------------------------------------------
+// ИНИЦИАЛИЗАЦИЯ И МИДЛВАР ТРЕДЫ
+// -----------------------------------------------------------------------------
 if (app.Environment.IsDevelopment())
 {
     using (var scope = app.Services.CreateScope())
     {
-        var db = scope.ServiceProvider.GetRequiredService<ShopDbContext>();
+        var db = scope.ServiceProvider.GetRequiredService<BankDbContext>();
+        // Автоматически создает базу данных и таблицы, если их нет (для учебного проекта)
         await db.Database.EnsureCreatedAsync();
     }
 
-    // В dev-режиме отображаем красивую интерактивную документацию.
     app.UseSwagger();
     app.UseSwaggerUI(options =>
     {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "RUT Shop API v1");
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "RUT Bank API v1");
         options.RoutePrefix = "swagger";
     });
 }
 
+// -----------------------------------------------------------------------------
+// МАРШРУТЫ API (Эндпоинты)
+// -----------------------------------------------------------------------------
 var api = app.MapGroup("/api");
-api.MapProductsEndpoints();
-api.MapCustomersEndpoints();
-api.MapPurchasesEndpoints();
 
+// Подключаем наши модули эндпоинтов
+api.MapUsersEndpoints();
+api.MapCardEndpoints();
+api.MapTransferEndpoints();
+
+// Корневой эндпоинт приветствия
 app.MapGet("/", () => Results.Ok(new
 {
-    message = "RUT Shop API работает. Откройте /api/products, /api/customers, /api/purchases."
+    message = "RUT Bank API работает успешно. Документация доступна на /swagger. Основные ресурсы: /api/users, /api/cards, /api/transfers."
 }));
 
 await app.RunAsync();

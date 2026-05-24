@@ -1,12 +1,12 @@
 using bank.net.dto.request;
-using bank.net.dto.response;
+using bank.net.model;
 
 namespace bank.net.interfaces;
 
 public interface ITransferService
 {
-    Task<TransferResponse> ProcessTransferAsync(CreateTransferRequest request);
-    Task<TransferResponse?> GetByIdAsync(Guid id);
-    Task<IReadOnlyList<TransferResponse>> GetAllAsync();
+    Task<Transfer> ProcessTransferAsync(CreateTransferRequest request);
+    Task<Transfer?> GetByIdAsync(Guid id);
+    Task<IReadOnlyList<Transfer>> GetAllAsync();
     Task<string> GetReceiptAsync(Guid id);
 }
