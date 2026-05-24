@@ -2,6 +2,7 @@ using bank.net.dto;
 using bank.net.dto.request;
 using bank.net.dto.response;
 using bank.net.interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace bank.net.api;
 
@@ -30,16 +31,29 @@ public static class CardEndpoints
             .Produces<CardResponse>(StatusCodes.Status200OK)
             .Produces<ErrorResponse>(StatusCodes.Status404NotFound);
 
-        group.MapPost("/", async (CreateCardRequest body, ICardService cards, IMapper mapper) =>
+        group.MapPost("/", async (CreateCardRequest body, ICardService cards, IUserService userService, IMapper mapper) =>
             {
                 try
                 {
+                    var owner = await userService.GetByIdAsync(body.UserId);
+                    System.Console.WriteLine("Владелец:");
+
+                    System.Console.WriteLine(owner is null);
+                    System.Console.WriteLine(owner);
+
+                    if (owner is null)
+                    {
+                        return Results.NotFound(new ErrorResponse { Message = "Клиент не найден." });
+                    }
                     var created = await cards.CreateAsync(body);
                     return Results.Created($"/api/cards/{created.Id}", mapper.Map(created));
                 }
                 catch (Exception ex) when (ex is ArgumentException or InvalidOperationException)
                 {
                     return Results.BadRequest(new ErrorResponse { Message = ex.Message });
+                } catch (DbUpdateException ex)
+                {
+                    return Results.BadRequest(new ErrorResponse {Message = "Карту невозможн создать (такое номер уже есть): " + ex.Message});
                 }
             })
             .WithSummary("Выпустить новую карту")

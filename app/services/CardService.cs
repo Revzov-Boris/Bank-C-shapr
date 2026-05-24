@@ -92,9 +92,9 @@ public class CardService(BankDbContext db) : ICardService
 
     private static void ValidateCardFields(string cardNumber, decimal balance)
     {
-        if (string.IsNullOrWhiteSpace(cardNumber) || cardNumber.Length < 16)
+        if (string.IsNullOrWhiteSpace(cardNumber) || cardNumber.Length != 16 || !cardNumber.All(char.IsDigit))
         {
-            throw new ArgumentException("Номер карты должен содержать минимум 16 символов.");
+            throw new ArgumentException("Номер карты должен состять из 16 цифр");
         }
 
         if (balance < 0)
