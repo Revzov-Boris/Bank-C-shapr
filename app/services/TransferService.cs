@@ -35,7 +35,7 @@ public class TransferService(BankDbContext db) : ITransferService
             throw new InvalidOperationException("Карта отправителя и получателя не могут совпадать.");
         }
 
-        // Открываем ACID транзакцию на уровне БД для изменения балансов нескольких сущностей
+        // Открываем транзакцию
         await using var transaction = await db.Database.BeginTransactionAsync();
 
         var sourceCard = await db.Cards.FirstOrDefaultAsync(c => c.Id == request.SourceCardId);
@@ -95,18 +95,17 @@ public class TransferService(BankDbContext db) : ITransferService
             }
         return $"""
         RUT BANK.NET
-        Кассовый чек
+        Чек
         ----------------------------------------
         Транзакция: {transfer.Id}
-        Дата (UTC): {transfer.TimestampUtc:yyyy-MM-dd HH:mm:ss}
+        Дата: {transfer.TimestampUtc:yyyy-MM-dd HH:mm:ss}
         Клиент: {userFullName} ({sourceCard?.UserId})
         ----------------------------------------
-        Списание с карты: {sourceCard?.CardNumber}
-        Получатель (ID карты): {transfer.TargetCardId}
+        ID карты отправителя: {sourceCard?.CardNumber}
+        ID карты получателя: {transfer.TargetCardId}
         ----------------------------------------
-        ИТОГО: {transfer.Amount:F2} RUB
+        СУММА: {transfer.Amount:F2} RUB
         Статус: Проведено успешно
-        Спасибо за доверие!
         """;
     }
 }

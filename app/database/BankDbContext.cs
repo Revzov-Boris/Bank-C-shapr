@@ -11,7 +11,6 @@ public class BankDbContext(DbContextOptions<BankDbContext> options) : DbContext(
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // Конфигурация точности для денежных типов (decimal) в PostgreSQL
         modelBuilder.Entity<Card>(entity =>
         {
             entity.Property(c => c.Balance)
