@@ -51,6 +51,12 @@ public class TransferService(BankDbContext db) : ITransferService
         {
             throw new InvalidOperationException("Недостаточно средств на карте отправителя.");
         }
+        decimal maxBalance = 1000000000;
+        if (targetCard.Balance + request.Amount > maxBalance)
+        {
+            throw new InvalidOperationException("На карте отправителя сумма будет превышать максимальное значение, операция отклонена");
+        }
+        
 
         // Изменение связанных сущностей
         sourceCard.Balance -= request.Amount;
