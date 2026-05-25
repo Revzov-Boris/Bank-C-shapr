@@ -81,7 +81,6 @@ public static class UsersEndpoints
                 }
                 catch (InvalidOperationException ex)
                 {
-                    // Различаем "Не найден" и "Бизнес-ошибка удаления" по тексту ошибки
                     return ex.Message.Contains("не найден")
                         ? Results.NotFound(new ErrorResponse { Message = ex.Message })
                         : Results.BadRequest(new ErrorResponse { Message = ex.Message });

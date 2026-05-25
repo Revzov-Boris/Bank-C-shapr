@@ -30,7 +30,6 @@ public static class TransferEndpoints
             .Produces<TransferResponse>(StatusCodes.Status200OK)
             .Produces<ErrorResponse>(StatusCodes.Status404NotFound);
 
-        // Ключевой прикладной сценарий — перевод денег
         group.MapPost("/", async (CreateTransferRequest body, ITransferService transfers, IMapper mapper) =>
             {
                 try
@@ -47,7 +46,6 @@ public static class TransferEndpoints
             .Produces<TransferResponse>(StatusCodes.Status201Created)
             .Produces<ErrorResponse>(StatusCodes.Status400BadRequest);
 
-        // Шаг 12 методички — Скачать чек перевода
         group.MapGet("/{id:guid}/receipt", async (Guid id, ITransferService transfers) =>
             {
                 try

@@ -99,12 +99,12 @@ public class TransferService(BankDbContext db) : ITransferService
         ----------------------------------------
         Транзакция: {transfer.Id}
         Дата: {transfer.TimestampUtc:yyyy-MM-dd HH:mm:ss}
-        Клиент: {userFullName} ({sourceCard?.UserId})
+        Отправитель: {userFullName} ({sourceCard?.UserId})
         ----------------------------------------
-        ID карты отправителя: {sourceCard?.CardNumber}
+        ID карты отправителя: {sourceCard?.Id}
         ID карты получателя: {transfer.TargetCardId}
         ----------------------------------------
-        СУММА: {transfer.Amount:F2} RUB
+        СУММА: {transfer.Amount} RUB
         Статус: Проведено успешно
         """;
     }
